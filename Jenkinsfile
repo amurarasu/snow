@@ -15,8 +15,18 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
+            archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
             junit 'build/test-results/**/*.xml'
+        }
+        success {
+            slackSend channel: '#jenkins-integration',
+                      color: 'good',
+                      message: "The pipeline ${currentBuild.fullDisplayName} completed successfully."
+        }
+        failure {
+            slackSend channel: '#jenkins-integration',
+                      color: 'danger',
+                      message: "The pipeline ${currentBuild.fullDisplayName} completed with error."
         }
     }
 }
