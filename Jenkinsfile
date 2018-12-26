@@ -11,6 +11,22 @@ pipeline {
                 bat './gradlew check'
             }
         }
+        stage('Deploy - Staging') {
+            steps {
+                bat './scripts/deploy_staging.bat'
+                bat './scripts/smoke_tests.bat'
+            }
+        }
+        stage('Sanity check') {
+            steps {
+                input "Does the staging environment look ok?"
+            }
+        }
+        stage('Deploy - Production') {
+            steps {
+                bat './scripts/deploy_production.bat'
+            }
+        }
     }
 
     post {
